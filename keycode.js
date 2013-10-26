@@ -28,8 +28,8 @@
  * to represent an event object.
  * 
  * There's also functionality to track and detect which keys are currently
- * being held down: install 'key_up' and 'key_down' on their respective event
- * handlers, and then check with 'is_down'.
+ * being held down: install 'keyUp' and 'keyDown' on their respective event
+ * handlers, and then check with 'isDown'.
  *
  * @fileoverview
  * @author Jonathan Tang
@@ -208,7 +208,7 @@ if(typeof window.KeyCode != "undefined") {
 }
 
 var KeyCode = window.KeyCode = {
-    no_conflict: function() {
+    noConflict: function() {
         window.KeyCode = _KeyCode;
         return KeyCode;
     },
@@ -245,12 +245,12 @@ var KeyCode = window.KeyCode = {
     },
 
     /** Checks if two key objects are equal. */
-    key_equals: function(key1, key2) {
+    keyEquals: function(key1, key2) {
         return key1.code == key2.code && same_modifiers(key1, key2);
     },
 
     /** Translates a keycode to its normalized value. */
-    translate_key_code: function(code) {
+    translate: function(code) {
         return KEY_MAP[code] || code;
     },
 
@@ -258,11 +258,11 @@ var KeyCode = window.KeyCode = {
      * object has the following fields:
      * { int code; boolean shift, boolean alt, boolean ctrl }
      */
-    translate_event: function(e) {
+    translateEvent: function(e) {
         e = e || window.event;
         var code = e.which || e.keyCode;
         return {
-            code: KeyCode.translate_key_code(code),
+            code: KeyCode.translate(code),
             shift: e.shiftKey,
             alt: e.altKey,
             ctrl: e.ctrlKey
@@ -273,8 +273,8 @@ var KeyCode = window.KeyCode = {
      * Keydown event listener to update internal state of which keys are
      * currently pressed.
      */ 
-    key_down: function(e) {
-        var key = KeyCode.translate_event(e);
+    keyDown: function(e) {
+        var key = KeyCode.translateEvent(e);
         current_keys.codes[key.code] = key.code;
         update_current_modifiers(key);
     },
@@ -282,17 +282,17 @@ var KeyCode = window.KeyCode = {
     /**
      * Keyup event listener to update internal state.
      */
-    key_up: function(e) {
-        var key = KeyCode.translate_event(e);
+    keyUp: function(e) {
+        var key = KeyCode.translateEvent(e);
         delete current_keys.codes[key.code];
         update_current_modifiers(key);
     },
 
     /**
-     * Returns true if the key spec (as returned by translate_event) is
+     * Returns true if the key spec (as returned by translateEvent) is
      * currently held down.
      */
-    is_down: function(key) {
+    isDown: function(key) {
         var code = key.code;
         if(code == KeyCode.CTRL) return current_keys.ctrl;
         if(code == KeyCode.ALT) return current_keys.alt;
@@ -305,7 +305,7 @@ var KeyCode = window.KeyCode = {
     /** Returns a string representation of a key event suitable for the
      * shortcut.js or JQuery HotKeys plugins.  Also makes a decent UI display.
      */
-    hot_key: function(key) {
+    hotKey: function(key) {
         var pieces = [];
         for(var i = 0; i < modifiers.length; ++i) {
             var modifier = modifiers[i];
