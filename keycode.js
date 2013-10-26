@@ -265,7 +265,8 @@ var KeyCode = window.KeyCode = {
             code: KeyCode.translate(code),
             shift: e.shiftKey,
             alt: e.altKey,
-            ctrl: e.ctrlKey
+            ctrl: e.ctrlKey,
+            meta: e.metaKey
         };
     },
 
